@@ -3,8 +3,8 @@ import { Physics } from "@react-three/rapier";
 import { Floor } from "./Components/Floor";
 import { Player } from "./Components/Player.tsx";
 import { Suspense, useEffect } from "react";
-import { OtherPlayers } from "./Components/OtherPlayers.tsx";
 import { useSocketStore } from "./store/socketStore.ts";
+import { OtherPlayers } from "./Components/OtherPlayers.tsx";
 
 export default function App() {
   const { connect } = useSocketStore();
@@ -26,7 +26,7 @@ export default function App() {
         <Physics>
           <Floor />
           <Player />
-          {/* <OtherPlayers /> */}
+          <OtherPlayers />
         </Physics>
       </Suspense>
     </Canvas>

@@ -2,27 +2,43 @@ import { create } from "zustand";
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 
+export type PlayerType = {
+  id: string;
+  position: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  rotation: {
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+  };
+};
+
 // Server events
 type ServerToClientEvents = {
-  stateUpdate: (players: any[]) => void; // replace `any` with your Player type
-  newPlayer: (player: any) => void;
+  stateUpdate: (players: PlayerType[]) => void; // replace `any` with your Player type
+  newPlayer: (player: PlayerType) => void;
   playerDisconnected: (playerId: string) => void;
 };
 
 // Client events
 type ClientToServerEvents = {
-  updateInput: {
+  updateInput: (data: {
     forward: boolean;
     backward: boolean;
     left: boolean;
     right: boolean;
     jump: boolean;
-  };
-  updateRotation: {
+  }) => void;
+
+  updateRotation: (data: {
     x: number; // pitch
     y: number; // yaw
     z: number; // roll (usually 0)
-  };
+  }) => void;
 };
 
 export type GameSocket = Socket<

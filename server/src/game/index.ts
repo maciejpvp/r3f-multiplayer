@@ -64,6 +64,7 @@ export async function initGameLoop(io: Server) {
       },
     }));
 
+    console.log(state);
     ioRef.emit("stateUpdate", state);
   }, TICK_RATE);
 }

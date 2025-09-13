@@ -8,7 +8,7 @@ import {
 import { useKeyboard } from "../hooks/useKeyboard";
 import { useMouseLook } from "../hooks/useMouseLook";
 import { usePlayerMovement } from "../hooks/usePlayerMovement";
-import { useSocketStore } from "../store/socketStore";
+import { useSocketStore, type PlayerType } from "../store/socketStore";
 
 export function Player() {
   const body = useRef<RapierRigidBody>(null);
@@ -26,7 +26,7 @@ export function Player() {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("stateUpdate", (players: any[]) => {
+    socket.on("stateUpdate", (players: PlayerType[]) => {
       const me = players.find((p) => p.id === socket!.id);
       if (me && body.current) {
         console.log(me.position.y);
