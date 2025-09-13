@@ -1,37 +1,30 @@
 import { Server, Socket } from "socket.io";
-import { players } from "../store/Players";
+import { PlayerInput } from "./types";
+import { createPlayer, getPlayers, removePlayer } from "../game/Player";
 
 export function registerSocketHandlers(io: Server, socket: Socket) {
-  console.log(`Player connected: ${socket.id}`);
+  console.log(`🎮 Player connected: ${socket.id}`);
 
-  players[socket.id] = {
-    id: socket.id,
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-  };
+  const player = createPlayer(socket.id);
 
-  socket.emit("currentPlayers", players);
+  console.log(player);
 
-  socket.broadcast.emit("newPlayer", players[socket.id]);
+  socket.emit("currentPlayers", getPlayers());
 
-  socket.on(
-    "updateState",
-    (data: {
-      position: [number, number, number];
-      rotation: [number, number, number];
-    }) => {
-      if (players[socket.id]) {
-        players[socket.id].position = data.position;
-        players[socket.id].rotation = data.rotation;
-        socket.broadcast.emit("playerMoved", players[socket.id]);
-      }
-    },
-  );
+  // socket.broadcast.emit("newPlayer", player);
 
-  // Disconnect
+  socket.on("updateInput", (input: PlayerInput) => {
+    player.input = input;
+  });
+
+  socket.on("updateRotation", (rotation) => {
+    console.log(rotation);
+    player.rotation = rotation;
+  });
+
   socket.on("disconnect", () => {
-    console.log(`Player disconnected: ${socket.id}`);
-    delete players[socket.id];
+    console.log(`👋 Player disconnected: ${socket.id}`);
+    removePlayer(socket.id);
     socket.broadcast.emit("playerDisconnected", socket.id);
   });
 }

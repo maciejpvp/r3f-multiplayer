@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import {
   RigidBody,
@@ -8,23 +8,45 @@ import {
 import { useKeyboard } from "../hooks/useKeyboard";
 import { useMouseLook } from "../hooks/useMouseLook";
 import { usePlayerMovement } from "../hooks/usePlayerMovement";
+import { useSocketStore } from "../store/socketStore";
 
 export function Player() {
   const body = useRef<RapierRigidBody>(null);
   const { camera } = useThree();
   const keys = useKeyboard();
+  const { socket } = useSocketStore();
 
-  // Apply mouse look
+  // Mouse look only affects camera
   useMouseLook(camera);
 
-  // Apply movement + server sync
-  usePlayerMovement(body, camera, keys);
+  // Handle inputs → emit to server
+  usePlayerMovement(keys);
+
+  // Listen for authoritative updates
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("stateUpdate", (players: any[]) => {
+      const me = players.find((p) => p.id === socket!.id);
+      if (me && body.current) {
+        console.log(me.position.y);
+        body.current.setTranslation(me.position, true);
+        body.current.setRotation(me.rotation, true);
+
+        // Camera follows
+        camera.position.set(me.position.x, me.position.y + 1.5, me.position.z);
+      }
+    });
+
+    return () => {
+      socket?.off("stateUpdate");
+    };
+  }, [socket, camera]);
 
   return (
     <RigidBody
       ref={body}
       mass={1}
-      position={[0, 2, 0]}
       enabledRotations={[false, false, false]}
       colliders={false}
     >

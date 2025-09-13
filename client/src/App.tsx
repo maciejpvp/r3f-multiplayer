@@ -2,10 +2,16 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { Floor } from "./Components/Floor";
 import { Player } from "./Components/Player.tsx";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { OtherPlayers } from "./Components/OtherPlayers.tsx";
+import { useSocketStore } from "./store/socketStore.ts";
 
 export default function App() {
+  const { connect } = useSocketStore();
+  useEffect(() => {
+    connect();
+  }, []);
+
   return (
     <Canvas
       style={{ width: "100vw", height: "100vh" }}
@@ -20,7 +26,7 @@ export default function App() {
         <Physics>
           <Floor />
           <Player />
-          <OtherPlayers />
+          {/* <OtherPlayers /> */}
         </Physics>
       </Suspense>
     </Canvas>
