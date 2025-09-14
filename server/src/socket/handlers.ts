@@ -17,18 +17,23 @@ export function registerSocketHandlers(io: Server, socket: Socket) {
   socket.on("updateInput", (input: PlayerInput) => {
     player.input = input;
   });
+  socket.on("updateRotation", (quat) => {
+    const q = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
 
-  socket.on("updateRotation", (rotation) => {
-    // rotation = { x, y, z } in radians
-    const euler = new THREE.Euler(rotation.x, rotation.y, rotation.z, "XYZ");
-    const quat = new THREE.Quaternion().setFromEuler(euler);
+    // Convert to Euler to isolate yaw
+    const euler = new THREE.Euler().setFromQuaternion(q, "YXZ");
+
+    // Build a new quaternion with only yaw (ignore pitch/roll)
+    const yawOnly = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(0, euler.y, 0, "YXZ"),
+    );
 
     player.body.setRotation(
       {
-        x: quat.x,
-        y: quat.y,
-        z: quat.z,
-        w: quat.w,
+        x: yawOnly.x,
+        y: yawOnly.y,
+        z: yawOnly.z,
+        w: yawOnly.w,
       },
       true,
     );

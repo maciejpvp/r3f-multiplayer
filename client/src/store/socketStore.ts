@@ -19,7 +19,7 @@ export type PlayerType = {
 
 // Server events
 type ServerToClientEvents = {
-  stateUpdate: (players: PlayerType[]) => void; // replace `any` with your Player type
+  stateUpdate: (players: PlayerType[]) => void;
   newPlayer: (player: PlayerType) => void;
   playerDisconnected: (playerId: string) => void;
 };
@@ -35,9 +35,10 @@ type ClientToServerEvents = {
   }) => void;
 
   updateRotation: (data: {
-    x: number; // pitch
-    y: number; // yaw
-    z: number; // roll (usually 0)
+    x: number;
+    y: number;
+    z: number;
+    w: number;
   }) => void;
 };
 

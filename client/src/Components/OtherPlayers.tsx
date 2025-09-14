@@ -9,7 +9,8 @@ export function OtherPlayers() {
     if (!socket) return;
 
     const handleStateUpdate = (playersData: PlayerType[]) => {
-      setPlayers(playersData);
+      const otherPlayers = playersData.filter((p) => p.id !== socket.id);
+      setPlayers(otherPlayers);
     };
 
     socket.on("stateUpdate", handleStateUpdate);

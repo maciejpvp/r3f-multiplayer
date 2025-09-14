@@ -19,9 +19,10 @@ export function useMouseLook(camera: Camera) {
       camera.quaternion.setFromEuler(euler);
 
       socket.emit("updateRotation", {
-        x: camera.rotation.x,
-        y: camera.rotation.y,
-        z: camera.rotation.z,
+        x: camera.quaternion.x,
+        y: camera.quaternion.y,
+        z: camera.quaternion.z,
+        w: camera.quaternion.w,
       });
     };
 
