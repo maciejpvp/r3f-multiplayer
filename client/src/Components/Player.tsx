@@ -1,20 +1,16 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
-import {
-  RigidBody,
-  CapsuleCollider,
-  RapierRigidBody,
-} from "@react-three/rapier";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { useMouseLook } from "../hooks/useMouseLook";
 import { usePlayerMovement } from "../hooks/usePlayerMovement";
 import { useSocketStore, type PlayerType } from "../store/socketStore";
+import * as THREE from "three";
 
 export function Player() {
-  const body = useRef<RapierRigidBody>(null);
   const { camera } = useThree();
   const keys = useKeyboard();
   const { socket } = useSocketStore();
+  const meshRef = useRef<THREE.Mesh>(null);
 
   // Mouse look only affects camera
   useMouseLook(camera);
@@ -28,12 +24,21 @@ export function Player() {
 
     socket.on("stateUpdate", (players: PlayerType[]) => {
       const me = players.find((p) => p.id === socket!.id);
-      if (me && body.current) {
-        console.log(me.position.y);
-        body.current.setTranslation(me.position, true);
-        body.current.setRotation(me.rotation, true);
+      if (me && meshRef.current) {
+        // Update mesh
+        meshRef.current.position.set(
+          me.position.x,
+          me.position.y,
+          me.position.z,
+        );
+        meshRef.current.quaternion.set(
+          me.rotation.x,
+          me.rotation.y,
+          me.rotation.z,
+          me.rotation.w,
+        );
 
-        // Camera follows
+        // Camera follows slightly above
         camera.position.set(me.position.x, me.position.y + 1.5, me.position.z);
       }
     });
@@ -44,17 +49,9 @@ export function Player() {
   }, [socket, camera]);
 
   return (
-    <RigidBody
-      ref={body}
-      mass={1}
-      enabledRotations={[false, false, false]}
-      colliders={false}
-    >
-      <CapsuleCollider args={[0.5, 1]} />
-      <mesh>
-        <capsuleGeometry args={[0.5, 1]} />
-        <meshStandardMaterial color="blue" wireframe />
-      </mesh>
-    </RigidBody>
+    <mesh ref={meshRef}>
+      <boxGeometry args={[0.5, 0.5, 0.5]} />
+      <meshStandardMaterial color="blue" wireframe />
+    </mesh>
   );
 }

@@ -8,7 +8,7 @@ export function setupWorld(): RAPIER.World {
   const floorBodyDesc = RAPIER.RigidBodyDesc.fixed().setTranslation(0, -5, 0);
   const floorBody = world.createRigidBody(floorBodyDesc);
 
-  const floorColliderDesc = RAPIER.ColliderDesc.cuboid(5, 5, 5);
+  const floorColliderDesc = RAPIER.ColliderDesc.cuboid(15, 5, 15);
   world.createCollider(floorColliderDesc, floorBody);
 
   return world;

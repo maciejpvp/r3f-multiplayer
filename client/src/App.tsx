@@ -9,8 +9,9 @@ import { OtherPlayers } from "./Components/OtherPlayers.tsx";
 export default function App() {
   const { connect } = useSocketStore();
   useEffect(() => {
+    console.log("Connecting...");
     connect();
-  }, []);
+  }, [connect]);
 
   return (
     <Canvas
