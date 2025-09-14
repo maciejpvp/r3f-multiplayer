@@ -23,6 +23,8 @@ export function registerSocketHandlers(io: Server, socket: Socket) {
     // Convert to Euler to isolate yaw
     const euler = new THREE.Euler().setFromQuaternion(q, "YXZ");
 
+    player.rotation = euler;
+
     // Build a new quaternion with only yaw (ignore pitch/roll)
     const yawOnly = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(0, euler.y, 0, "YXZ"),

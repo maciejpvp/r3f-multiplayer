@@ -57,10 +57,9 @@ export async function initGameLoop(io: Server) {
         z: p.body.translation().z,
       },
       rotation: {
-        x: p.body.rotation().x,
-        y: p.body.rotation().y,
-        z: p.body.rotation().z,
-        w: p.body.rotation().w,
+        x: p.rotation.x,
+        y: p.rotation.y,
+        z: p.rotation.z,
       },
     }));
 

@@ -38,8 +38,7 @@ export function Player() {
           me.rotation.w,
         );
 
-        // Camera follows slightly above
-        camera.position.set(me.position.x, me.position.y + 1.5, me.position.z);
+        camera.position.set(me.position.x, me.position.y + 1, me.position.z);
       }
     });
 
