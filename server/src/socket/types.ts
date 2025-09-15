@@ -18,3 +18,8 @@ export interface Player {
     z: number;
   };
 }
+
+export type Block = {
+  id: string;
+  body: RAPIER.RigidBody;
+};

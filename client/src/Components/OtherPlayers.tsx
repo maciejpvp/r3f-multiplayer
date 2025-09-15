@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import * as THREE from "three";
-import { useSocketStore, type PlayerType } from "../store/socketStore";
+import {
+  useSocketStore,
+  type GameState,
+  type PlayerType,
+} from "../store/socketStore";
 
 export function OtherPlayers() {
   const socket = useSocketStore((store) => store.socket);
@@ -9,8 +13,9 @@ export function OtherPlayers() {
   useEffect(() => {
     if (!socket) return;
 
-    const handleStateUpdate = (playersData: PlayerType[]) => {
-      const otherPlayers = playersData.filter((p) => p.id !== socket.id);
+    const handleStateUpdate = (state: GameState) => {
+      const players: PlayerType[] = state.players;
+      const otherPlayers = players.filter((p) => p.id !== socket.id);
       setPlayers(otherPlayers);
     };
 

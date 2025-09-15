@@ -2,13 +2,12 @@ import { Server, Socket } from "socket.io";
 import { PlayerInput } from "./types";
 import { createPlayer, getPlayers, removePlayer } from "../game/Player";
 import * as THREE from "three";
+import { handleBlockInteract } from "../game/actions/handleBlockInteract";
 
 export function registerSocketHandlers(io: Server, socket: Socket) {
   console.log(`🎮 Player connected: ${socket.id}`);
 
   const player = createPlayer(socket.id);
-
-  console.log(player);
 
   socket.emit("currentPlayers", getPlayers());
 
@@ -39,6 +38,11 @@ export function registerSocketHandlers(io: Server, socket: Socket) {
       },
       true,
     );
+  });
+
+  socket.on("blockInteract", (data: { blockId: string | null }) => {
+    console.log(data.blockId);
+    handleBlockInteract(player.id, data.blockId);
   });
 
   socket.on("disconnect", () => {

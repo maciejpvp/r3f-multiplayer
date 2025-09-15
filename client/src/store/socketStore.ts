@@ -17,9 +17,20 @@ export type PlayerType = {
   };
 };
 
+export type BlockType = {
+  id: string;
+  position: { x: number; y: number; z: number };
+  rotation: { x: number; y: number; z: number; w: number };
+};
+
+export type GameState = {
+  players: PlayerType[];
+  blocks: BlockType[];
+};
+
 // Server events
 type ServerToClientEvents = {
-  stateUpdate: (players: PlayerType[]) => void;
+  stateUpdate: (state: GameState) => void;
   newPlayer: (player: PlayerType) => void;
   playerDisconnected: (playerId: string) => void;
 };
@@ -76,9 +87,9 @@ export const useSocketStore = create<SocketStore>((set) => ({
       console.log("❌ Socket disconnected");
     });
 
-    socket.onAny((event, ...args) => {
-      console.log(`📥 Received event: "${event}"`, ...args);
-    });
+    // socket.onAny((event, ...args) => {
+    //   console.log(`📥 Received event: "${event}"`, ...args);
+    // });
 
     socketInstance = socket;
     set({ socket });
