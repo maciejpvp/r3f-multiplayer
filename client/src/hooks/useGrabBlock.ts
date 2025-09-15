@@ -15,14 +15,11 @@ export function useGrabBlock() {
   useFrame(() => {
     const ePressed = keys.current["KeyE"];
 
-    // Edge trigger: just pressed this frame
     if (ePressed && !prevE.current) {
       if (holding) {
-        // Release currently held block
         socket?.emit("blockInteract", { blockId: null });
         setHolding(null);
       } else if (blockId) {
-        // Grab block under crosshair
         socket?.emit("blockInteract", { blockId });
         setHolding(blockId);
       }
@@ -31,5 +28,5 @@ export function useGrabBlock() {
     prevE.current = ePressed;
   });
 
-  return holding; // currently held block ID
+  return holding;
 }

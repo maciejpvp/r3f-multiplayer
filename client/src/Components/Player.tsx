@@ -12,7 +12,7 @@ export function Player() {
   const keys = useKeyboard();
   const { socket } = useSocketStore();
   const meshRef = useRef<THREE.Mesh>(null);
-  const holding = useGrabBlock();
+  useGrabBlock();
 
   // Mouse look only affects camera
   useMouseLook(camera);

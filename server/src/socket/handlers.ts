@@ -11,20 +11,16 @@ export function registerSocketHandlers(io: Server, socket: Socket) {
 
   socket.emit("currentPlayers", getPlayers());
 
-  // socket.broadcast.emit("newPlayer", player);
-
   socket.on("updateInput", (input: PlayerInput) => {
     player.input = input;
   });
   socket.on("updateRotation", (quat) => {
     const q = new THREE.Quaternion(quat.x, quat.y, quat.z, quat.w);
 
-    // Convert to Euler to isolate yaw
     const euler = new THREE.Euler().setFromQuaternion(q, "YXZ");
 
     player.rotation = euler;
 
-    // Build a new quaternion with only yaw (ignore pitch/roll)
     const yawOnly = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(0, euler.y, 0, "YXZ"),
     );
@@ -48,6 +44,8 @@ export function registerSocketHandlers(io: Server, socket: Socket) {
   socket.on("disconnect", () => {
     console.log(`👋 Player disconnected: ${socket.id}`);
     removePlayer(socket.id);
+    handleBlockInteract(player.id, null);
+
     socket.broadcast.emit("playerDisconnected", socket.id);
   });
 }

@@ -51,6 +51,8 @@ type ClientToServerEvents = {
     z: number;
     w: number;
   }) => void;
+
+  blockInteract: (data: { blockId: string | null }) => void;
 };
 
 export type GameSocket = Socket<
