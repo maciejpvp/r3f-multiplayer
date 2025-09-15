@@ -13,12 +13,15 @@ export function setupWorld(): RAPIER.World {
   world.createCollider(floorColliderDesc, floorBody);
 
   //Blocks
-  for (let i = 0; i < 5; i++) {
-    const x = (Math.random() - 0.5) * 20; // random between -10 and 10
-    const y = 0.5; // sitting just above floor
-    const z = (Math.random() - 0.5) * 20; // random between -10 and 10
+  for (let i = 0; i < 15; i++) {
+    const x = (Math.random() - 0.5) * 20;
+    const y = 0.5;
+    const z = (Math.random() - 0.5) * 20;
     createBlock(`block-${i}`, { x, y, z }, world);
   }
+
+  world.integrationParameters.normalizedPredictionDistance = 0.2;
+  world.integrationParameters.numSolverIterations = 8;
 
   return world;
 }

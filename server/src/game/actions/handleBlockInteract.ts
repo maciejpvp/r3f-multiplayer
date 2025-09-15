@@ -37,6 +37,8 @@ export function updateHeldBlocks() {
     const block = blocks.get(blockId);
     if (!player || !block) continue;
 
+    block.body.wakeUp();
+
     const euler = new THREE.Euler(
       player.rotation.x,
       player.rotation.y,
